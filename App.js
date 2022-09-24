@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
 import Task from './components/Task';
 
@@ -26,21 +26,21 @@ export default function App() {
     <View style={styles.container}>
       {/* Today's Tasks*/}
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Today's Tasks</Text>
-        <View style={styles.items}>
-          {/* This is where the tasks will go! */}
-          {
-            taskItems.map((item, index) => {
-              
-              return <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                  <Task text={item}/>
-                </TouchableOpacity>
-            })
-          }
-          {/* <Task text={'Task 1'}/>
-          <Task text={'Task 2'}/> */}
-        </View>
-
+          <Text style={styles.sectionTitle}>Todo List</Text>
+          <View style={styles.line}></View>
+          <View style={styles.items}>
+            {/* This is where the tasks will go! */}
+            {
+              taskItems.map((item, index) => {
+                
+                return <TouchableOpacity key={index} onPress={() => completeTask(index)}>
+                    <Task text={item}/>
+                  </TouchableOpacity>
+              })
+            }
+            {/* <Task text={'Task 1'}/>
+            <Task text={'Task 2'}/> */}
+          </View>
       </View>
       {/* Write a task */}
       <KeyboardAvoidingView 
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8EAED',
   },
   tasksWrapper: {
-    paddingTop: 80,
+    paddingTop: 60,
     paddingHorizontal: 20,
   },
   sectionTitle: {
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   items: {
-    marginTop: 30,
+    marginTop: 15,
   },
   writeTaskWrapper: {
     position: 'absolute',
@@ -103,4 +103,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   addText: {},
+  line: {
+    backgroundColor: '#C0C0C0',
+    height: 3,
+    width: 150,
+    borderRadius: 60,
+    marginVertical: 5,
+  }
 });

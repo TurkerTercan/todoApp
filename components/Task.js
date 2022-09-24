@@ -16,12 +16,12 @@ const Task = (props) => {
 const styles = StyleSheet.create({
     item: {
         backgroundColor: '#FFF',
-        padding: 15,
+        padding: 20,
         borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 20,
+        marginBottom: 10,
     },
     itemLeft: {
         flexDirection: 'row',
