@@ -13,7 +13,7 @@ export default function Task(props) {
         <View style={styles.item}>
             <View style={styles.itemLeft}>
                 <TouchableOpacity style={styles.square} onPress={handleCheck}>
-                    {checked === true ? <Icon name='check' size={20} color='yellow'></Icon> : null}
+                    {checked ? <Icon name='check' size={20} color='yellow'></Icon> : null}
                 </TouchableOpacity>
                 <Text style={styles.itemNext}>{props.text}</Text>
             </View>
