@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, ScrollView, useColorScheme } from 'react-native';
 import Task from './components/Task';
 
 export default function App() {
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
+
+  const isDarkMode = useColorScheme() === 'dark';
 
   const handleAddTask = () => {
     if (task !== null) {
