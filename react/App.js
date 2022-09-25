@@ -27,15 +27,12 @@ export default function App() {
           <Text style={styles.sectionTitle}>Todo List</Text>
           <View style={styles.line}></View>
           <ScrollView style={styles.items}>
-            {/* This is where the tasks will go! */}
             {
               taskItems.map((item, index) => {
                 
                 return <Task text={item} key={index} delete={() => completeTask(index)}/>
               })
             }
-            {/* <Task text={'Task 1'}/>
-            <Task text={'Task 2'}/> */}
           </ScrollView>
       </View>
       {/* Write a task */}
