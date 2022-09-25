@@ -1,7 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
-import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
+import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, ScrollView } from 'react-native';
 import Task from './components/Task';
 
 export default function App() {
@@ -21,26 +19,24 @@ export default function App() {
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
   }
-
+  
   return (
     <View style={styles.container}>
       {/* Today's Tasks*/}
       <View style={styles.tasksWrapper}>
           <Text style={styles.sectionTitle}>Todo List</Text>
           <View style={styles.line}></View>
-          <View style={styles.items}>
+          <ScrollView style={styles.items}>
             {/* This is where the tasks will go! */}
             {
               taskItems.map((item, index) => {
                 
-                return <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                    <Task text={item}/>
-                  </TouchableOpacity>
+                return <Task text={item} key={index} delete={() => completeTask(index)}/>
               })
             }
             {/* <Task text={'Task 1'}/>
             <Task text={'Task 2'}/> */}
-          </View>
+          </ScrollView>
       </View>
       {/* Write a task */}
       <KeyboardAvoidingView 
@@ -74,10 +70,11 @@ const styles = StyleSheet.create({
   },
   items: {
     marginTop: 15,
+    marginBottom: 140,
   },
   writeTaskWrapper: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 30,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
