@@ -6,7 +6,7 @@ export default function App() {
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const [domain, setDomain] = useState("localhost:8000")
 
   const handleAddTask = () => {
     if (task !== null) {
@@ -31,7 +31,6 @@ export default function App() {
           <ScrollView style={styles.items}>
             {
               taskItems.map((item, index) => {
-                
                 return <Task text={item} key={index} delete={() => completeTask(index)}/>
               })
             }
