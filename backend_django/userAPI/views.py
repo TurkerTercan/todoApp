@@ -10,14 +10,16 @@ class TodoView(APIView):
         todoDict = {}
         toDoObjects = ToDoItem.objects.all()
 
+        index = 0
         if request.method == "GET":
             try:
                 for todo in toDoObjects:
-                    todoDict[todo.name] = {
+                    todoDict[index] = {
                         'id': todo.id,
                         'name': todo.name,
                         'finished': todo.finished,
                     }
+                    index += 1
                 return Response(todoDict, status=200)
             except Exception as e:
                 print(e)
@@ -40,7 +42,19 @@ class TodoView(APIView):
 
         if len(bad_setting) > 0:
             return Response({"INVALID SETTINGS": bad_setting}, status=200)
-        return Response(status=200)
+
+        todoDict = {}
+        toDoObjects = ToDoItem.objects.all()
+
+        index = 0
+        for todo in toDoObjects:
+            todoDict[index] = {
+                'id': todo.id,
+                'name': todo.name,
+                'finished': todo.finished,
+            }
+            index += 1
+        return Response(todoDict, status=200)
 
     def put(self, request, format=None):
         # JSON Object: {"todo": [{"ID": ID}, {"NAME": NAME}, {"FINISHED": NEW_VALUE}]
@@ -63,6 +77,7 @@ class TodoView(APIView):
 
     def delete(self, request, format=None):
         # JSON Object: {"todo": [{"NAME": NAME}]}
+        print(request.data)
         todos = request.data['todo']
 
         for todo in todos:

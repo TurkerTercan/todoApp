@@ -1,21 +1,51 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 
 export default function Task(props) {
-    const [checked = false, setChecked] = useState();
+    const id = props.data.id;
+    const name = props.data.name;
+
+    const [finished = props.data.finished, setChecked] = useState();
+    const [domain, setDomain] = useState("http://10.0.2.2:8000");
+
+    async function finishTask(_data) {
+        try {
+            console.log("PUT TODOITEMS")
+            let return_response = undefined;
+            await axios.put(domain + '/api/v1.0/user/update-todo-item/', _data).then(response => {return_response = response});
+            return return_response;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleCheck = () => {
-        setChecked(!checked);
+        data = {
+            "todo": [
+                {
+                    "ID": id,
+                    "NAME": name,
+                    "FINISHED": !finished
+                }
+            ]
+        }
+        finishTask(data).then(response => { 
+            if (response.status === 200) {
+                setChecked(!finished);
+            }
+         });
     }
 
     return (
         <View style={styles.item}>
             <View style={styles.itemLeft}>
                 <TouchableOpacity style={styles.square} onPress={handleCheck}>
-                    {checked ? <Icon name='check' size={20} color='yellow'></Icon> : null}
+                    {finished ? <Icon name='check' size={20} color='yellow'></Icon> : null}
                 </TouchableOpacity>
-                <Text style={styles.itemNext}>{props.text}</Text>
+                <Text style={styles.itemNext}>{name}</Text>
             </View>
             
             <TouchableOpacity style={styles.circular} onPress={props.delete}>

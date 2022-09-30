@@ -1,25 +1,101 @@
-import React, {useState} from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, ScrollView, useColorScheme } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, KeyboardAvoidingView, ScrollView } from 'react-native';
 import Task from './components/Task';
+import axios from 'axios';
 
 export default function App() {
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
 
-  const [domain, setDomain] = useState("localhost:8000")
+  const [domain, setDomain] = useState("http://10.0.2.2:8000")
 
-  const handleAddTask = () => {
-    if (task !== null) {
-      Keyboard.dismiss();
-      setTaskItems([...taskItems, task]);
-      setTask(null);
+  async function getAllItems() {
+    try {
+      console.log("GET TODOITEMS");
+
+      const todoItems = await axios.get(domain + '/api/v1.0/user/todo-items')
+      let values = []
+      Object.entries(todoItems.data).forEach(([key, value]) => {
+        values.push(value);
+      });
+      setTaskItems(values);
+
+    } catch (error) {
+      console.log(error)
+      console.log("error getItem")
     }
   }
 
-  const completeTask = (index) => {
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy);
+  useEffect(()=> {
+    getAllItems()
+  }, [])
+
+  async function postNewItem(_data) {
+    try {
+      console.log("POST TODOITEMS")
+      let return_response = undefined;
+      await axios.post(domain + '/api/v1.0/user/update-todo-item/', _data).then(response => {return_response = response});
+      if (return_response.status === 200) {
+          let values = [];
+          Object.entries(return_response.data).forEach(([key, value]) => {
+            values.push(value);
+          });
+          setTaskItems(values);
+      }
+      return return_response;
+    }
+    catch (error) {
+        console.log(error);
+    }
+  }
+
+  async function handleAddTask() {
+    if (task !== null) {
+      data = {
+        "todo": [
+          {
+            "NAME": task,
+            "FINISHED": false
+          }
+        ]
+      }
+      postNewItem(data).then(response => {
+        if (response.status === 200) {
+          Keyboard.dismiss();
+          setTask(null);
+        }
+      });
+    }
+  }
+
+  async function deleteTask(_deleteData) {
+    try {
+      console.log("DELETE TODOITEM")
+      console.log(_deleteData);
+      return await axios.delete(domain + '/api/v1.0/user/update-todo-item/', {'data': _deleteData});
+    }
+    catch (error) {
+        console.log(error);
+    }
+  }
+
+  async function completeTask(index) {
+    data = {
+      "todo": [
+          {
+              "ID": taskItems[index].id,
+              "NAME": taskItems[index].name,
+              "FINISHED": taskItems[index].finished
+          }
+      ]
+    }
+    deleteTask(data).then(response => {
+      if (response !== undefined && response.status === 200) {
+        let itemsCopy = [...taskItems];
+        itemsCopy.splice(index, 1);
+        setTaskItems(itemsCopy);
+      }
+    });
   }
   
   return (
@@ -31,7 +107,10 @@ export default function App() {
           <ScrollView style={styles.items}>
             {
               taskItems.map((item, index) => {
-                return <Task text={item} key={index} delete={() => completeTask(index)}/>
+                return <Task 
+                data={item} key={index} 
+                delete={() => completeTask(index)}
+                />
               })
             }
           </ScrollView>
